@@ -161,22 +161,17 @@ document.addEventListener('DOMContentLoaded', async function() {
         };
 
         try {
-            const response = await fetch('/data/pedidos.json');
-            let pedidos = await response.json();
+            const response = await fetch('/api/dataHandler.js', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(order)
+            });
 
-            // Verificar si el pedido ya existe para actualizarlo
-            const existingOrderIndex = pedidos.findIndex(p => p.id === pedidoIdCompleto);
-
-            if (existingOrderIndex > -1) {
-                // Actualizar pedido existente
-                pedidos[existingOrderIndex] = order;
-            } else {
-                // Agregar nuevo pedido
-                pedidos.push(order);
+            if (!response.ok) {
+                throw new Error('No se pudo guardar el pedido en el servidor.');
             }
-
-            // Guardar el JSON actualizado
-            await savePedidos(pedidos);
 
             alert(`Pedido ${status} con éxito.`);
             limpiarLocalStorage(); // Llama a la función de limpieza para eliminar todos los datos
@@ -184,16 +179,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         } catch (error) {
             console.error('Error al guardar el pedido:', error);
         }
-    }
-
-    async function savePedidos(pedidos) {
-        await fetch('/data/pedidos.json', {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(pedidos)
-        });
     }
 
     // Función para limpiar el localStorage

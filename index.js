@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
-const dataHandler = require('./api/dataHandler'); // Asegúrate de que el path sea correcto
+const dataHandler = require('/api/dataHandler'); // Asegúrate de que el path sea correcto
 
 app.use(express.json());
 
